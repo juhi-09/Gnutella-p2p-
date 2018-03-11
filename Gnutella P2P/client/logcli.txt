@@ -1,0 +1,57 @@
+share "images/deer illustration.jpg"
+search "bob.txt"
+search "deer"
+share "cv.pdf"
+
+
+share "cv.pdf"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+share "cv.pdf"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+share "cv.pdf"
+
+
+share "cv.pdf"
+
+
+share cv.pdf
+
+
+share "cv.pdf"
+share cv.pdf
