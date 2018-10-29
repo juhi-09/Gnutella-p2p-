@@ -5,7 +5,6 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <netinet/in.h>
-#include <string>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
@@ -43,12 +42,12 @@ void sock_creation(const char *ser_ip ,int ser_port,const char* cli_ip, int cli_
     inet_pton(AF_INET, cli_ip, &client_addr.sin_addr);
     bind(sock, (struct sockaddr *)&client_addr,sizeof(client_addr));
 
- memset(&serv_addr, '0', sizeof(serv_addr));
- serv_addr.sin_family = AF_INET;
- serv_addr.sin_port = htons(ser_port);                                   //filling in the server details
- inet_pton(AF_INET, ser_ip, &serv_addr.sin_addr);   
+	memset(&serv_addr, '0', sizeof(serv_addr));
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_port = htons(ser_port);                                   //filling in the server details
+	inet_pton(AF_INET, ser_ip, &serv_addr.sin_addr);   
 
- connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr));           //call to server
+	connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr));           //call to server
 
 }
 
@@ -56,9 +55,9 @@ void sock_creation(const char *ser_ip ,int ser_port,const char* cli_ip, int cli_
 //Listening for the rpc and dwnloding of the files**************
 void *sock_ser_create(void* a)
 {
-pthread_detach(pthread_self());
-cli_rpc=socket(AF_INET, SOCK_STREAM,0);
-memset(&cli_ser_addr,'0',sizeof(cli_ser_addr));
+	pthread_detach(pthread_self());
+	cli_rpc=socket(AF_INET, SOCK_STREAM,0);
+	memset(&cli_ser_addr,'0',sizeof(cli_ser_addr)); // Clearing the client address
 
 
     cli_ser_addr.sin_family = AF_INET;
@@ -72,37 +71,33 @@ memset(&cli_ser_addr,'0',sizeof(cli_ser_addr));
         ser_rpc_sock=accept(cli_rpc, (struct sockaddr *)&cli_rpc_addr,(socklen_t*)&cli_rpc_addr);
         bzero(buffer,1024);
         read(ser_rpc_sock,buffer,1024);
-      if(buffer[0]=='2')
-       {
-        //cout<<buffer<<" buffer "<<endl;
-         string out_file=" | cat > out.txt";
-         string d=buffer;
-         d=d.substr(1);
-         //cout<<d<<"   d  "<<endl;
-         out_file=d+ out_file;
-        // cout<<"out  "<<out_file<<endl;
-         system(out_file.c_str());
-         ifstream in;
-         string s;
-         in.open("out.txt");
-         if(in.is_open())
-         {
-         //cout<<"............."<<endl;
-       while(!in.eof())
+      	if(buffer[0]=='2')
         {
-         getline(in,s);
-         send(ser_rpc_sock,s.c_str(),1024,0);
-        }
-        s="finish";
-        send(ser_rpc_sock,s.c_str(),1024,0);
-         in.close();
-         ia=0;
-       }
-       else
-          {
-            s="COMMAND NOT EXECUTED finish";
-            send(ser_rpc_sock,s.c_str(),1024,0);
-          }
+	         string out_file=" | cat > out.txt";
+	         string d=buffer;
+	         d=d.substr(1);
+	         out_file=d+ out_file;
+	         system(out_file.c_str());
+	         ifstream in;
+	         string s;
+	         in.open("out.txt");
+	         if(in.is_open())
+	        {
+		        while(!in.eof())
+		        {
+		         getline(in,s);
+		         send(ser_rpc_sock,s.c_str(),1024,0);
+		        }
+		        s="finish";
+		        send(ser_rpc_sock,s.c_str(),1024,0);
+		         in.close();
+		         ia=0;
+	       }
+	       else
+	          {
+	            s="COMMAND NOT EXECUTED finish";
+	            send(ser_rpc_sock,s.c_str(),1024,0);
+	          }
        }
      else
       {
@@ -138,11 +133,10 @@ memset(&cli_ser_addr,'0',sizeof(cli_ser_addr));
 int main(int argc, char const *argv[])
 {
 
-pthread_t t;
-argv2=argv[2];
-argv6=atoi(argv[6]);
-//int o=0;
- pthread_create(&t,NULL,&sock_ser_create,NULL);
+	pthread_t t;
+	argv2=argv[2];
+	argv6=atoi(argv[6]);
+	 pthread_create(&t,NULL,&sock_ser_create,NULL);
 
     sock_creation(argv[4],atoi(argv[5]),argv[2],atoi(argv[3]));
     string message;
@@ -215,7 +209,6 @@ case 0: //SEARCH THE MAP FOR FIle
          string f=b;
          string p=b;
          f=f.substr(f.length()-6);
-         //cout<<f<<"     "<<endl;
          if(f=="finish")
          {
          i=0;
@@ -318,7 +311,6 @@ case 3: //ERASE ENTRY FROM THE FILE
         
 case 4://rpc call 
        {
-        //cout<<input[0]<<"   "<<input[1]<<"   "<<input[2]<<endl;
  
         bzero(buffer,1024);
         string m;
